@@ -241,7 +241,7 @@ public class TopologyIT extends OpenNMSSeleniumTestCase {
         }
 
         public void close() {
-            testCase.findElementByXpath("//div[@class='v-window-closebox']").click();
+            testCase.clickElement(By.xpath("//div[@class='v-window-closebox']"));
         }
     }
 
@@ -260,7 +260,7 @@ public class TopologyIT extends OpenNMSSeleniumTestCase {
          * Closes the context menu without clicking on an item
          */
         public void close() {
-            testCase.m_driver.findElement(By.id("TopologyComponent")).click();
+            testCase.clickElement(By.id("TopologyComponent"));
         }
 
         public void click(String... menuPath) {
@@ -268,7 +268,7 @@ public class TopologyIT extends OpenNMSSeleniumTestCase {
                 try {
                     testCase.setImplicitWait(1, TimeUnit.SECONDS);
                     for (String eachPath : menuPath) {
-                        testCase.findElementByXpath("//*[@class='v-context-menu-container']//*[@class='v-context-menu']//*[text()='" + eachPath + "']").click();
+                        testCase.clickElement(By.xpath("//*[@class='v-context-menu-container']//*[@class='v-context-menu']//*[text()='" + eachPath + "']"));
                     }
                     waitForTransition();
                 } finally {
@@ -314,8 +314,7 @@ public class TopologyIT extends OpenNMSSeleniumTestCase {
         public void click(String label) {
             try {
                 testCase.setImplicitWait(1, TimeUnit.SECONDS);
-                WebElement element = testCase.findElementByXpath("//*[@id='breadcrumbs']//*[contains(text(), '" + label + "')]");
-                element.click();
+                testCase.clickElement(By.xpath("//*[@id='breadcrumbs']//*[contains(text(), '" + label + "')]"));
                 waitForTransition();
             } finally {
                 testCase.setImplicitWait();
@@ -436,7 +435,7 @@ public class TopologyIT extends OpenNMSSeleniumTestCase {
         }
 
         public TopologyUIPage refreshNow() {
-            testCase.findElementById("refreshNow").click();
+            testCase.clickElement(By.id("refreshNow"));
             waitForTransition();
             return this;
         }
@@ -548,8 +547,7 @@ public class TopologyIT extends OpenNMSSeleniumTestCase {
             try {
                 testCase.setImplicitWait(1, TimeUnit.SECONDS);
                 openLayerSelectionComponent();
-                WebElement layerElement = testCase.findElementById("layerComponent").findElement(By.xpath("//div[text() = '" + layerName + "']"));
-                layerElement.click();
+                testCase.findElementById("layerComponent").findElement(By.xpath("//div[text() = '" + layerName + "']")).click();
                 waitForTransition();
             } finally {
                 testCase.setImplicitWait();
@@ -580,7 +578,7 @@ public class TopologyIT extends OpenNMSSeleniumTestCase {
 
         private void openLayerSelectionComponent() {
             if (!isLayoutComponentVisible()) {
-                testCase.findElementById("layerToggleButton").click();
+                testCase.clickElement(By.id("layerToggleButton"));
             }
         }
 
@@ -657,7 +655,7 @@ public class TopologyIT extends OpenNMSSeleniumTestCase {
             clearFocus();
             try {
                 testCase.setImplicitWait(1, TimeUnit.SECONDS);
-                testCase.findElementById("defaultFocusBtn").click();
+                testCase.clickElement(By.id("defaultFocusBtn"));
                 waitForTransition();
             } finally {
                 testCase.setImplicitWait();
@@ -751,7 +749,7 @@ public class TopologyIT extends OpenNMSSeleniumTestCase {
         }
 
         public TopologyUIPage selectItemThatContains(String substring) {
-            ui.testCase.findElementByXpath(String.format(XPATH, substring)).click();
+            ui.testCase.clickElement(By.xpath(String.format(XPATH, substring)));
             waitForTransition();
             return ui;
         }

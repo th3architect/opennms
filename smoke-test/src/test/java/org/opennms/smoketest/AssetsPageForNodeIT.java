@@ -99,7 +99,7 @@ public class AssetsPageForNodeIT extends OpenNMSSeleniumTestCase {
      */
     @Test
     public void testAssetPage() throws Exception {
-        findElementByLink("Asset Info").click();
+        clickElement(By.linkText("Asset Info"));
         Alert alert = m_driver.switchTo().alert();
         alert.accept();
 

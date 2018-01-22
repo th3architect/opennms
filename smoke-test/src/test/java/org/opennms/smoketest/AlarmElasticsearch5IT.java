@@ -41,6 +41,8 @@ import java.net.InetSocketAddress;
 
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.opennms.netmgt.events.api.EventConstants;
@@ -71,6 +73,11 @@ public class AlarmElasticsearch5IT {
     private static final Logger LOG = LoggerFactory.getLogger(AlarmElasticsearch5IT.class);
 
     private static TestEnvironment testEnvironment;
+
+    @Before
+    public void dockerOnly() {
+        Assume.assumeTrue(OpenNMSSeleniumTestCase.isDockerEnabled());
+    }
 
     @ClassRule
     public static final TestEnvironment getTestEnvironment() {

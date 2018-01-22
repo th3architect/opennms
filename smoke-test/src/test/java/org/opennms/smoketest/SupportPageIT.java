@@ -74,14 +74,13 @@ public class SupportPageIT extends OpenNMSSeleniumTestCase {
 
     @Test
     public void testSystemReport() {
-        m_driver.findElement(By.linkText("Generate System Report")).click();
+        clickElement(By.linkText("Generate System Report"));
 
-        // checkboxes are selected by default
-        final WebElement allCheckbox = m_driver.findElement(By.cssSelector("input[type=checkbox][name=all]"));
-        assertThat(m_driver.findElement(By.cssSelector("input[type=checkbox][name=plugins][value=Java]")).isSelected(), is(true));
+        final By javaCheckbox = By.cssSelector("input[type=checkbox][name=plugins][value=Java]");
+        assertThat(m_driver.findElement(javaCheckbox).isSelected(), is(true));
 
         // deselect the "all" checkbox
-        allCheckbox.click();
-        assertThat(m_driver.findElement(By.cssSelector("input[type=checkbox][name=plugins][value=Java]")).isSelected(), is(false));
+        clickElement(By.cssSelector("input[type=checkbox][name=all]"));
+        assertThat(m_driver.findElement(javaCheckbox).isSelected(), is(false));
     }
 }
