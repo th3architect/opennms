@@ -1,15 +1,14 @@
 org_opennms_features_vaadin_components_graph_GraphContainer = function() {
   var e = this.getElement();
 
+  console.log('graphcontainer: registering state change');
   this.onStateChange = function() {
+    console.log('graphcontainer: state change triggered', this.getState());
     // Globals
     window.onmsGraphContainers = {
         'baseHref': this.getState().baseHref,
         'engine': this.getState().engine
     };
-
-    // Update the baseUrl to use an absolute path
-    requirejs.config({baseUrl: this.getState().baseHref + 'lib'});
 
     // Build the div
     var div = document.createElement('div');
@@ -48,15 +47,14 @@ org_opennms_features_vaadin_components_graph_GraphContainer = function() {
 org_opennms_features_vaadin_components_graph_InlineGraphContainer = function() {
   var e = this.getElement();
 
+  console.log('inlinegraphcontainer: registering state change');
   this.onStateChange = function () {
+    console.log('inlinegraphcontainer: state change triggered', this.getState());
     // Globals
     window.onmsGraphContainers = {
       'baseHref': this.getState().baseHref,
       'engine': this.getState().engine
     };
-
-    // Update the baseUrl to use an absolute path
-    requirejs.config({baseUrl: this.getState().baseHref + 'lib'});
 
     // Render
     GraphContainers.render();

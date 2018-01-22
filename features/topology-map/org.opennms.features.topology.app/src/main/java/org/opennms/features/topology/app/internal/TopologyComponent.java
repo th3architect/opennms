@@ -61,7 +61,12 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.AbstractComponent;
 
-@JavaScript({"theme://js/d3.js"})
+@JavaScript({
+    "theme://../opennms/assets/manifest.min.js",
+    "theme://../opennms/assets/vendor.min.js",
+    "theme://../opennms/assets/global.min.js",
+    "theme://../opennms/assets/d3-js.min.js"
+})
 public class TopologyComponent extends AbstractComponent implements ChangeListener, ValueChangeListener, MapViewManagerListener {
 
     TopologyComponentServerRpc m_rpc = new TopologyComponentServerRpc(){

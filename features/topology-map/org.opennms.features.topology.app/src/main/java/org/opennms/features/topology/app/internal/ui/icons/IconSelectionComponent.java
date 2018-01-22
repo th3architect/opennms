@@ -35,10 +35,14 @@ import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
 
 @JavaScript({
-        "theme://js/d3.js",
-        "theme://js/icon-selection-component_connector.js"
+    "theme://../opennms/assets/manifest.min.js",
+    "theme://../opennms/assets/vendor.min.js",
+    "theme://../opennms/assets/global.min.js",
+    "theme://../opennms/assets/d3-js.min.js",
+    "theme://js/icon-selection-component_connector.js"
 })
 public class IconSelectionComponent extends AbstractJavaScriptComponent {
+    private static final long serialVersionUID = 1L;
 
     public IconSelectionComponent(List<String> elementsToShow, String currentIconId) {
         getState().setElementsToShow(elementsToShow);
