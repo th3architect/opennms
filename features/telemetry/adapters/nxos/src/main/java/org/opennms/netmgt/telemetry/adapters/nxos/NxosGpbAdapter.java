@@ -31,6 +31,7 @@ package org.opennms.netmgt.telemetry.adapters.nxos;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.Optional;
 
 import org.opennms.netmgt.collection.api.CollectionAgent;
@@ -46,6 +47,7 @@ import org.opennms.netmgt.telemetry.adapters.collection.AbstractPersistingAdapte
 import org.opennms.netmgt.telemetry.adapters.collection.CollectionSetWithAgent;
 import org.opennms.netmgt.telemetry.adapters.collection.ScriptedCollectionSetBuilder;
 import org.opennms.netmgt.telemetry.adapters.nxos.proto.TelemetryBis;
+import org.opennms.netmgt.telemetry.adapters.nxos.proto.TelemetryBis.Telemetry;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +58,7 @@ import org.springframework.transaction.support.TransactionOperations;
 
 import com.google.common.collect.Iterables;
 import com.google.protobuf.ExtensionRegistry;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class NxosGpbAdapter extends AbstractPersistingAdapter {
 
@@ -110,10 +113,11 @@ public class NxosGpbAdapter extends AbstractPersistingAdapter {
     @Override
     public Optional<CollectionSetWithAgent> handleMessage(TelemetryMessage message, TelemetryMessageLog messageLog) throws Exception {
     
-        final TelemetryBis.Telemetry msg = TelemetryBis.Telemetry.parseFrom(message.getByteArray(), s_registry);
+        final TelemetryBis.Telemetry msg = tryParsingTelemetryMessage(message.getByteArray(), 0);
 
         CollectionAgent agent = null;
         try {
+            LOG.debug(" node id from nxos buffer = {}", msg.getNodeIdStr());
             final InetAddress inetAddress = InetAddress.getByName(msg.getNodeIdStr());
             final Optional<Integer> nodeId = interfaceToNodeCache.getFirstNodeId(messageLog.getLocation(), inetAddress);
             if (nodeId.isPresent()) {
@@ -151,6 +155,23 @@ public class NxosGpbAdapter extends AbstractPersistingAdapter {
         }
         final CollectionSet collectionSet = builder.build(agent, msg);
         return Optional.of(new CollectionSetWithAgent(agent, collectionSet));
+    }
+
+    private Telemetry tryParsingTelemetryMessage(byte[] bs, int offset) throws InvalidProtocolBufferException {
+
+        try {
+            return TelemetryBis.Telemetry.parseFrom(bs, s_registry);
+        } catch (InvalidProtocolBufferException e) {
+            if (offset == 0) {
+                ByteBuffer buffer = ByteBuffer.wrap(bs);
+                byte[] bytes = new byte[buffer.remaining() - 6];
+                buffer.get(bytes, 6, buffer.remaining() - 6);
+                tryParsingTelemetryMessage(bytes, 6);
+            } else {
+                throw e;
+            }
+        }
+        return null;
     }
 
     public void setCollectionAgentFactory(CollectionAgentFactory collectionAgentFactory) {
